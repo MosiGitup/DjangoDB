@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="title icon" href="{% static 'img/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>DGI
+        {% if region %}
+           Products: {{ region.name }}
+        {% else %}
+           Products
+        {% endif %}
+    </title>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="{% static 'css/all.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/simple-line-icons.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/landing-page.min.css' %}" rel="stylesheet">
+  </head>
+<body>
+<style>
+   body { background: lightcyan !important; }
+</style>
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-md navbar-light">
+      <button class="navbar-toggler ml-auto mb-2 bg-light" type="button" data-toggle="collapse" data-target="#myNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <div class="container-fluid">
+          <div class="row">
+            <!-- sidebar -->
+            <div class="col-xl-2 col-lg-3 col-md-4 sidebar fixed-top">
+              <a href="{% url 'secondHome' %}" class="navbar-brand text-white d-block mx-auto text-center py-3 mb-4 bottom-border"><img src="{% static 'img/logo1.png' %}" class="mr-3" width="35" height="35" alt="dromadaire logo">DGI</a>
+              <h1 class="navbar-brand text-white d-block mx-auto text-center py-3 mb-4">{{ region.name }}</h1>
+              <ul class="navbar-nav flex-column my-auto mx-auto">
+                <img src="{% if region.image %}
+                            {{ region.image.url }}
+                          {% else %}
+                            {% static "img/no_image.png" %}
+                          {% endif %}" alt="">
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- top-nav -->
+    {% if lan == "FR" %}
+        <div class="navbar navbar-dark col-xl-10 col-lg-9 col-md-8 ml-auto bg-dark py-3 fixed-top">
+          <div class="container-fluid">
+              <h3>
+                  <a class="text-info font-weight-bold" href="{{ region.project.get_absolute_url }}">
+                      {{ region.project }}
+                  </a>
+              </h3>
+              <div class="row">
+                {% if user.username %}
+                  <a href="#" class="text-light font-weight-bold h5 text-decoration-none my-auto mr-1">Bonjour {{ user.username }}</a>
+                  <a class="btn btn-secondary text-decoration-none my-auto" href="{% url 'logout_page' %}"><i class="fas fa-sign-out-alt"></i></a>
+                {% elif client %}
+                    <a href="#" class="text-light font-weight-bold h5 text-decoration-none my-auto mr-1">Bonjour {{ client }}</a>
+                    <a class="btn btn-secondary text-decoration-none my-auto" href="{% url 'logout_page' %}"><i class="fas fa-sign-out-alt"></i></a>
+                {% else %}
+                  <a class="btn btn-secondary mx-1" href="{% url 'sign_in' %}">Connection</a>
+                  <a class="btn btn-secondary" href="{% url 'sign_up' %}">M'inscrire</a>
+                {% endif %}
+                  <form action="{% url 'secondHome' %}" method="post">
+                      {% csrf_token %}
+                      <input type="submit" value="EN" name="language" class="btn btn-secondary bg-dark ml-1">
+                  </form>
+              </div>
+          </div>
+        </div>
+    {% else %}
+        <div class="navbar navbar-dark col-xl-10 col-lg-9 col-md-8 ml-auto bg-dark py-3 fixed-top">
+          <div class="container-fluid">
+              <h3>
+                  <a class="text-info font-weight-bold" href="{{ region.project.get_absolute_url }}">
+                      {{ region.project }}
+                  </a>
+              </h3>
+              <div class="row">
+                {% if user.username %}
+                  <a href="#" class="text-light font-weight-bold h5 text-decoration-none my-auto mr-1">Hello {{ user.username }}</a>
+                  <a class="btn btn-secondary text-decoration-none my-auto" href="{% url 'logout_page' %}"><i class="fas fa-sign-out-alt"></i></a>
+                {% elif client %}
+                    <a href="#" class="text-light font-weight-bold h5 text-decoration-none my-auto mr-1">Hello {{ client }}</a>
+                    <a class="btn btn-secondary text-decoration-none my-auto" href="{% url 'logout_page' %}"><i class="fas fa-sign-out-alt"></i></a>
+                {% else %}
+                  <a class="btn btn-secondary mx-1" href="{% url 'sign_in' %}">Login</a>
+                  <a class="btn btn-secondary" href="{% url 'sign_up' %}">Sign up</a>
+                {% endif %}
+                  <form action="{% url 'secondHome' %}" method="post">
+                      {% csrf_token %}
+                      <input type="submit" value="FR" name="language" class="btn btn-secondary bg-dark ml-1">
+                  </form>
+              </div>
+          </div>
+        </div>
+    {% endif %}
+    <!-- end of top-nav -->
+    <!-- Background  -->
+    <section class="masthead">
+      <div class="container-fluid py-5">
+        <div class="row">
+          <div class="col-xl-2 col-lg-3 col-md-4">
+          </div>
+          <div class="col-xl-10 col-lg-9 col-md-8 pt-5 sorted">
+                <table class="table" id="myTable2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Date <i class="fa fa-fw fa-sort"></i></th>
+                      <th scope="col">Sentinel-1 <i class="fa fa-fw fa-sort"></i></th>
+                      <th scope="col">Sentinel-2 <i class="fa fa-fw fa-sort"></i></th>
+                      <th scope="col">Landsat <i class="fa fa-fw fa-sort"></i></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for pro in pro_region %}
+                      {% if pro.available %}
+                        <tr>
+                            <th scope="row" class="text-dark">{{ pro.created }}</th>
+                                <td class="text-dark">
+                                  {% if 'S1' in pro.name %}
+                                        <a class="text-primary font-weight-bold" href="{{ pro.download.url }}" download="{{ pro.download.url }}">{{ pro.name }}</a>
+                                  {% endif %}
+                                </td>
+                                <td class="text-dark">
+                                  {% if 'S2' in pro.name %}
+                                        <a class="text-primary font-weight-bold" href="{{ pro.download.url }}" download="{{ pro.download.url }}">{{ pro.name }}</a>
+                                  {% endif %}
+                                </td>
+                                <td class="text-dark">
+                                  {% if 'LO' in pro.name or 'LC' in pro.name %}
+                                        <a class="text-primary font-weight-bold" href="{{ pro.download.url }}" download="{{ pro.download.url }}">{{ pro.name }}</a>
+                                  {% endif %}
+                                </td>
+                        </tr>
+                      {% endif %}
+                  {% endfor %}
+                  </tbody>
+                </table>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="{% static 'jquery/jquery-3.5.1.js' %}"></script>
+    {% if lan == "FR" %}
+        <script src="{% static 'jquery/jquery.dataTables.min_fr.js' %}"></script>
+    {% else %}
+        <script src="{% static 'jquery/jquery.dataTables.min.js' %}"></script>
+    {% endif %}
+    <script>
+        $(document).ready(function() {
+            $('#myTable2').DataTable( {
+                "order": [[ 0, "desc" ]]
+            } );
+        } );
+    </script>
+</body>
+</html>

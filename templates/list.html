@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  {% if project %}
+      {{ project.name }}
+  {% else %}
+      Products
+  {% endif %}
+{% endblock %}
+{% block content %}
+  <div id="sidebar">
+    <h3>Projects</h3>
+        <ul>
+          {% for pro in projects %}
+             <li {% if project.slug == pro.slug %} class="selected" {% endif %}>
+               <a href="{{ pro.get_absolute_url }}">{{ pro.name }}</a>
+             </li>
+          {% endfor %}
+        </ul>
+    {% if project %}
+        <h3>Regions</h3>
+            <ul>
+              {% for reg in regions %}
+                <li {% if region.slug == reg.slug %} class="selected" {% endif %}>
+                  <a href="{{ reg.get_absolute_url }}">{{ reg.name }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+    {% endif %}
+    {% if region %}
+        <h3>Products</h3>
+            <ul>
+              {% for prod in products %}
+                <li {% if product.slug == prod.slug %} class="selected" {% endif %}>
+                  <a href="{{ prod.region.get_absolute_url }}">{{ prod.name }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+    {% endif %}
+  </div>
+  <div id="main" class="product-list">
+    <h1>
+        {% if project %}
+            {{ project.name }}
+        {% else %}
+            Projects
+        {% endif %}
+    </h1>
+  {% if not project %}
+    {% for pro in projects %}
+        <div class="item">
+            <a href="{{ pro.get_absolute_url }}">
+              <img src="{% if pro.image %} {{ pro.image.url }} {% else %} {% static "img/no_image.png" %} {% endif %}" alt="">
+            </a>
+            <a href="{{ pro.get_absolute_url }}">{{ pro.name }}</a>
+            <br>
+        </div>
+    {% endfor %}
+  {% else %}
+    {% for reg in regions %}
+{#      {% if regions %}#}
+        <div class="item">
+        <h3>{{ product }}</h3>
+            <a href="{{ reg.get_absolute_url }}">
+              <img src="{% if reg.image %} {{ reg.image.url }} {% else %} {% static "img/no_image.png" %} {% endif %}" alt="">
+            </a>
+            <a href="{{ reg.get_absolute_url }}">{{ reg.name }}</a>
+{#            <br>#}
+{#            <a href="{{ product.get_absolute_url }}">{{ product.name }} Mosi</a>#}
+            <br>
+        </div>
+{#      {% endif %}#}
+    {% endfor %}
+  {% endif %}
+  </div>
+{% endblock %}

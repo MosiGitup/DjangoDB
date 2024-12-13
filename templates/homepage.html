@@ -1,0 +1,203 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="title icon" href="{% static 'img/Logoo.png' %}">
+    <title>MOSISOM
+        {% if project %}
+           Products: {{ project.name }}
+        {% else %}
+           Products
+        {% endif %}
+    </title>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="{% static 'css/all.min.css' %}" rel="stylesheet">
+{#    <link href="{% static 'css/simple-line-icons.css' %}" rel="stylesheet" type="text/css">#}
+{#    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">#}
+
+    <!-- Custom styles for this template -->
+{#    <link href="{% static 'css/landing-page.min.css' %}" rel="stylesheet">#}
+    <link rel="stylesheet" href="{% static 'css/style4.css' %}">
+  </head>
+<body>
+<style>
+   body { background: rgb(39, 49, 63) !important; }
+</style>
+{#<div>#}
+{#    <img src="{% static 'img/Back1.jpg' %}" style="height: 1100px" alt="">#}
+{#</div>#}
+{#style="background-image: url('../img/Back1.jpg')"#}
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-md navbar-light">
+      <button class="navbar-toggler ml-auto bg-light" type="button" data-toggle="collapse" data-target="#myNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <div class="container-fluid">
+          <div class="row">
+            <!-- sidebar -->
+            <div class="col-xl-2 col-lg-3 col-md-4 sidebar fixed-top overflow-auto">
+              <a href="{% url 'DBhome' %}" class="navbar-brand text-white d-block mx-auto text-center py-3 border-bottom mt-1"><img src="{% static 'img/Logo1.png' %}" class="mr-3" width="35" height="35" alt="dromadaire logo">MOSISOM</a>
+              <ul class="navbar-nav flex-column mt-4 ml-4">
+                {% if project %}
+                    {% if lan == "FR" %}
+                        <h5 class="text-light mt-4">Régions</h5>
+                    {% else %}
+                        <h5 class="text-light mt-4">Regions</h5>
+                    {% endif %}
+                        {% for reg in regions %}
+                            <li {% if region.slug == reg.slug %} {% endif %} class="mt-1">
+                                  <a href="{{ reg.get_absolute_url }}" class="text-light text-decoration-none ml-2">{{ reg.name }}</a>
+                            </li>
+                    {% endfor %}
+                {% endif %}
+                {% if region %}
+                    {% if lan == "FR" %}
+                        <h5 class="text-light mt-4">Produits</h5>
+                    {% else %}
+                        <h5 class="text-light mt-4">Products</h5>
+                    {% endif %}
+                    <div class="mb-5">
+                        {% for prod in products %}
+                            {% if client_domain == 'SPQ' and 'SPQ' in prod.slug %}
+                                <li {% if product.slug == prod.slug %} {% endif %} class="mt-1">
+                                    {% if prod.updated.date >= date_lim %}
+                                      <a href="{{ prod.region.get_absolute_url }}" class="text-light text-decoration-none ml-2">{{ prod.created.date }} - {{ prod.region }}</a>
+                                    {% endif %}
+                                </li>
+                            {% elif client_domain == 'BC' and 'BC' in prod.slug %}
+                                <li {% if product.slug == prod.slug %} {% endif %} class="mt-1">
+                                    {% if prod.updated.date >= date_lim %}
+                                      <a href="{{ prod.region.get_absolute_url }}" class="text-light text-decoration-none ml-2">{{ prod.created.date }} - {{ prod.region }}</a>
+                                    {% endif %}
+                                </li>
+                            {% elif client_domain == 'Yukon' and 'YK' in prod.slug %}
+                                <li {% if product.slug == prod.slug %} {% endif %} class="mt-1">
+                                    {% if prod.updated.date >= date_lim %}
+                                      <a href="{{ prod.region.get_absolute_url }}" class="text-light text-decoration-none ml-2">{{ prod.created.date }} - {{ prod.region }}</a>
+                                    {% endif %}
+                                </li>
+                            {% elif user.username %}
+                                <li {% if product.slug == prod.slug %} {% endif %} class="mt-1">
+                                    {% if prod.updated.date >= date_lim %}
+                                      <a href="{{ prod.region.get_absolute_url }}" class="text-light text-decoration-none ml-2">{{ prod.created.date }} - {{ prod.region }}</a>
+                                    {% endif %}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- top-nav -->
+    {% if lan == "FR" %}
+        <div class="navbar navbar-dark col-xl-10 col-lg-9 col-md-8 ml-auto bg-muted mt-3 fixed-top bottom-border">
+          <div class="container-fluid">
+              <h3 class="text-muted font-weight-bold"></h3>
+              <div class="row">
+                {% if user.username %}
+                  <a href="#" class="text-light font-weight-bold h5 text-decoration-none my-auto mr-1">Bonjour {{ user.username }}</a>
+                  <a class="btn btn-secondary text-decoration-none my-auto" href="{% url 'logout_page' %}"><i class="fas fa-sign-out-alt"></i></a>
+                {% elif client %}
+                    <a href="#" class="text-light font-weight-bold h5 text-decoration-none my-auto mr-1">Bonjour {{ client }}</a>
+                    <a class="btn btn-secondary text-decoration-none my-auto" href="{% url 'logout_page' %}"><i class="fas fa-sign-out-alt"></i></a>
+                {% else %}
+                  <a class="btn btn-secondary mx-1" href="{% url 'sign_in' %}">Connection</a>
+                  <a class="btn btn-secondary" href="{% url 'sign_up' %}">M'inscrire</a>
+                {% endif %}
+                  <form action="{% url 'secondHome' %}" method="post">
+                      {% csrf_token %}
+                      <input type="submit" value="EN" name="language" class="btn btn-secondary bg-dark ml-1">
+                  </form>
+              </div>
+          </div>
+        </div>
+    {% else %}
+        <div class="navbar navbar-dark col-xl-10 col-lg-9 col-md-8 ml-auto bg-muted mt-3 fixed-top bottom-border">
+          <div class="container-fluid">
+              <h3 class="text-muted font-weight-bold"></h3>
+              <div class="row">
+                {% if user.username %}
+                  <a href="#" class="text-light font-weight-bold h5 text-decoration-none my-auto mr-1">Hi {{ user.username }}</a>
+                  <a class="btn btn-secondary text-decoration-none my-auto" href="{% url 'logout_page' %}"><i class="fas fa-sign-out-alt"></i></a>
+                {% elif client %}
+                    <a href="#" class="text-light font-weight-bold h5 text-decoration-none my-auto mr-1">Hi {{ client }}</a>
+                    <a class="btn btn-secondary text-decoration-none my-auto" href="{% url 'logout_page' %}"><i class="fas fa-sign-out-alt"></i></a>
+                {% else %}
+                  <a class="btn btn-secondary mx-1" href="{% url 'sign_in' %}">Login</a>
+                  <a class="btn btn-secondary" href="{% url 'sign_up' %}">Sign up</a>
+                {% endif %}
+                  <form action="{% url 'secondHome' %}" method="post">
+                      {% csrf_token %}
+                      <input type="submit" value="FR" name="language" class="btn btn-secondary bg-dark ml-1">
+                  </form>
+              </div>
+          </div>
+        </div>
+    {% endif %}
+    <!-- end of top-nav -->
+    <!-- Background  -->
+    <section class="p-5">
+      <div class="container-fluid">
+         <div class="row pt-5">
+          <div class="col-xl-2 col-lg-3 col-md-4"></div>
+             <div class="col-xl-10 col-lg-9 col-md-8">
+             <!-- title -->
+                 <div class="text-center mb-3">
+                     <h1 class="text-light font-weight-bold">River Ice Monitoring Projects</h1>
+                 </div>
+             <!-- end of title -->
+                 <div class="row">
+                     {% if not project %}
+                         {% for PR in projects %}
+                            {% if admin_user %}
+                                <div class="col-lg-3 col-sm-3 my-5 mx-auto">
+                                    <a href="{{ PR.get_absolute_url }}">
+                                        <img src="{% if PR.image %} {{ PR.image.url }} {% else %} {% static "img/no_image.png" %} {% endif %}" class="card-img-top" width="350" height="300" alt="">
+                                    </a>
+                                    <h1 class="text-center"><a href="{{ PR.get_absolute_url }}" class="text-light text-decoration-none">{{ PR.name }}</a></h1>
+                                    <p class="text-center text-light">{{ PR.description }}</p>
+                                </div>
+                            {% elif client_domain == 'BC' and PR.name == "BC" %}
+                                <div class="col-lg-3 col-sm-3 my-5 mx-auto">
+                                    <a href="{{ PR.get_absolute_url }}">
+                                        <img src="{% if PR.image %} {{ PR.image.url }} {% else %} {% static "img/no_image.png" %} {% endif %}" class="card-img-top" width="350" height="300" alt="project 1 icon"/>
+                                    </a>
+                                    <h1 class="text-center"><a href="{{ PR.get_absolute_url }}" class="text-light text-decoration-none">{{ PR.name }}</a></h1>
+                                    <p class="text-center text-light">{{ PR.description }}</p>
+                                </div>
+                            {% elif client_domain == 'SPQ' and PR.name == "SPQ" %}
+                                <div class="col-lg-3 col-sm-3 my-5 mx-auto">
+                                    <a href="{{ PR.get_absolute_url }}">
+                                        <img src="{% if PR.image %} {{ PR.image.url }} {% else %} {% static "img/no_image.png" %} {% endif %}" class="card-img-top" width="350" height="300" alt="project 1 icon"/>
+                                    </a>
+                                    <h1 class="text-center"><a href="{{ PR.get_absolute_url }}" class="text-light text-decoration-none">{{ PR.name }}</a></h1>
+                                    <p class="text-center text-light">{{ PR.description }}</p>
+                                </div>
+                            {% elif client_domain == 'YK' and PR.name == "YK" %}
+                                <div class="col-lg-3 col-sm-3 my-5 mx-auto">
+                                    <a href="{{ PR.get_absolute_url }}">
+                                        <img src="{% if PR.image %} {{ PR.image.url }} {% else %} {% static "img/no_image.png" %} {% endif %}" class="card-img-top" width="350" height="300" alt="project 1 icon"/>
+                                    </a>
+                                    <h1 class="text-center"><a href="{{ PR.get_absolute_url }}" class="text-light text-decoration-none">{{ PR.name }}</a></h1>
+                                    <p class="text-center text-light">{{ PR.description }}</p>
+                                </div>
+                            {% endif %}
+                         {% endfor %}
+                    {% endif %}
+                 </div>
+             </div>
+         </div>
+      </div>
+    </section>
+</body>
+</html>

@@ -1,0 +1,48 @@
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #eee;
+}
+
+/* navbar */
+.sidebar {
+  height: 150vh;
+  background: linear-gradient(to bottom, rgb(39, 49, 63), rgba(226, 219, 219, 0)), url("../img/Logoo3.png") no-repeat center center;
+  background-size: 90%;
+  /*box-shadow: 5px 7px 25px #bcb9b9;*/
+}
+
+.bottom-border {
+  border-bottom: 1px groove #eee;
+}
+
+.sidebar-link {
+  transition: all .4s;
+}
+
+.sidebar-link:hover {
+  background-color: #448EB3;
+  border-radius: 5px;
+}
+
+.current {
+  background-color: #7E7E88;
+  border-radius: 7px;
+  box-shadow: 2px 5px 10px #111;
+  transition: all .3s;
+}
+
+.current:hover {
+  background-color: #62636B;
+  border-radius: 7px;
+  box-shadow: 2px 5px 20px #111;
+  transform: translateY(-1px);
+}
+
+.dropdown-menu {
+  padding-left: 30px;
+
+}
+
+.fa-caret-right {
+  float: right;
+}
